@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         this.load.image('goblin1', './assets/goblin1.png');
         this.load.image('goblin2', './assets/goblin2.png');
         this.load.image('field', './assets/field.png');
+        this.load.image('trees', './assets/trees.png');
         // load spritesheets
         this.load.spritesheet('die', './assets/die.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 10});
         this.load.spritesheet('die2', './assets/die2.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 10});
@@ -70,14 +71,18 @@ class Play extends Phaser.Scene {
             10,
             game.settings.goblinSpeed
         ).setOrigin(0,0);
-        
+
         // brown UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x663931).setOrigin(0, 0);
-        // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
+
+        // tree borders
+        this.trees1 = this.add.tileSprite(
+            0,
+            0, 
+            640, 
+            480, 
+            'trees'
+        ).setOrigin(0, 0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -102,10 +107,10 @@ class Play extends Phaser.Scene {
 
         // display score
         let scoreConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Georgia',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
+            backgroundColor: '#663931',
+            color: '#000000',
             align: 'right',
             padding: {
                 top: 5,
