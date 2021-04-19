@@ -9,8 +9,9 @@ class Play extends Phaser.Scene {
         this.load.image('goblin1', './assets/goblin1.png');
         this.load.image('goblin2', './assets/goblin2.png');
         this.load.image('starfield', './assets/field.png');
-        // load spritesheet
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        // load spritesheets
+        this.load.spritesheet('die', './assets/die.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 10});
+        this.load.spritesheet('die2', './assets/die2.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 10});
     } 
 
     create() {
@@ -31,8 +32,8 @@ class Play extends Phaser.Scene {
             'arrow'
         ).setOrigin(0.5, 0);
 
-        // add goblins (x3)
-        this.goblin01 = new Goblin1(
+        // add goblins (x4)
+        this.goblin01 = new Goblin(
             this, 
             game.config.width + borderUISize*9, 
             borderUISize*4, 
@@ -40,7 +41,7 @@ class Play extends Phaser.Scene {
             0, 
             60
         ).setOrigin(0, 0);
-        this.goblin02 = new Goblin1(
+        this.goblin02 = new Goblin(
             this, 
             game.config.width + borderUISize*6, 
             borderUISize*5 + borderPadding*2, 
@@ -48,7 +49,7 @@ class Play extends Phaser.Scene {
             0, 
             30
         ).setOrigin(0, 0);
-        this.goblin03 = new Goblin1(
+        this.goblin03 = new Goblin(
             this, 
             game.config.width + borderUISize*3, 
             borderUISize*6 + borderPadding*4, 
@@ -56,7 +57,7 @@ class Play extends Phaser.Scene {
             0, 
             20
         ).setOrigin(0,0);
-        this.goblin04 = new Goblin1(
+        this.goblin04 = new Goblin(
             this, 
             game.config.width, 
             borderUISize*7 + borderPadding*6, 
@@ -81,8 +82,13 @@ class Play extends Phaser.Scene {
     
         // animation config
         this.anims.create({
-            key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
+            key: 'death',
+            frames: this.anims.generateFrameNumbers('die', { start: 0, end: 10, first: 0}),
+            frameRate: 30
+        });
+        this.anims.create({
+            key: 'death2',
+            frames: this.anims.generateFrameNumbers('die2', { start: 0, end: 10, first: 0}),
             frameRate: 30
         });
 
@@ -129,7 +135,7 @@ class Play extends Phaser.Scene {
 
         if(!this.gameOver) {
             this.p1Arrow.update();      // update arrow sprite
-            this.goblin01.update();     // update goblins (x3)
+            this.goblin01.update();     // update goblins (x4)
             this.goblin02.update();
             this.goblin03.update();
             this.goblin04.update();
@@ -170,13 +176,24 @@ class Play extends Phaser.Scene {
         // temporarily hide goblin
         goblin.alpha = 0;
         // create explosion sprite at goblin's position
-        let boom = this.add.sprite(goblin.x, goblin.y, 'explosion').setOrigin(0, 0);
-        boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after anim completes
-            goblin.reset();                     // reset goblin position
-            goblin.alpha = 1;                   // make goblin visible again
-            boom.destroy();                     // remove animation sprite
-        });
+        // there are two explosion animations for the 2 goblin types; gonna separate them by point value
+        if(goblin.points == 60){
+            let boom = this.add.sprite(goblin.x, goblin.y, 'die2').setOrigin(0, 0);
+            boom.anims.play('death2');               // play death animation
+            boom.on('animationcomplete', () => {    // callback after anim completes
+                goblin.reset();                     // reset goblin position
+                goblin.alpha = 1;                   // make goblin visible again
+                boom.destroy();                     // remove animation sprite
+            });
+        } else {
+            let boom = this.add.sprite(goblin.x, goblin.y, 'die').setOrigin(0, 0);
+            boom.anims.play('death');               // play death animation
+            boom.on('animationcomplete', () => {    // callback after anim completes
+                goblin.reset();                     // reset goblin position
+                goblin.alpha = 1;                   // make goblin visible again
+                boom.destroy();                     // remove animation sprite
+            });
+        }
         // score add and repaint
         this.p1Score += goblin.points;
         this.scoreLeft.text = this.p1Score;

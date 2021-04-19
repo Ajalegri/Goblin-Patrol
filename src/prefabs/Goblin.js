@@ -1,10 +1,10 @@
-// Goblin1 prefab
-class Goblin1 extends Phaser.GameObjects.Sprite {
+// Goblin prefab
+class Goblin extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame, pointValue) {
         super(scene, x, y , texture, frame);
         scene.add.existing(this);                       // add to existing scene
         this.points = pointValue;                       // store pointValue
-        this.moveSpeed = game.settings.goblin1Speed;    // pixels per frame
+        this.moveSpeed = game.settings.goblinSpeed;    // pixels per frame
     }
 
     update() {
