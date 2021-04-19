@@ -8,20 +8,21 @@ class Play extends Phaser.Scene {
         this.load.image('arrow', './assets/arrow.png');
         this.load.image('goblin1', './assets/goblin1.png');
         this.load.image('goblin2', './assets/goblin2.png');
-        this.load.image('starfield', './assets/field.png');
+        this.load.image('field', './assets/field.png');
         // load spritesheets
         this.load.spritesheet('die', './assets/die.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 10});
         this.load.spritesheet('die2', './assets/die2.png', {frameWidth: 32, frameHeight: 32, startFrame: 0, endFrame: 10});
     } 
 
     create() {
+        this.sound.play('music');
         // place tile sprite
         this.field = this.add.tileSprite(
             0, 
             0, 
             640, 
             480, 
-            'starfield'
+            'field'
         ).setOrigin(0, 0);
         
         // add arrow (p1)
@@ -39,7 +40,8 @@ class Play extends Phaser.Scene {
             borderUISize*4, 
             'goblin2', 
             0, 
-            60
+            60,
+            game.settings.goblinSpeed+0.5
         ).setOrigin(0, 0);
         this.goblin02 = new Goblin(
             this, 
@@ -47,7 +49,8 @@ class Play extends Phaser.Scene {
             borderUISize*5 + borderPadding*2, 
             'goblin1', 
             0, 
-            30
+            30,
+            game.settings.goblinSpeed
         ).setOrigin(0, 0);
         this.goblin03 = new Goblin(
             this, 
@@ -55,7 +58,8 @@ class Play extends Phaser.Scene {
             borderUISize*6 + borderPadding*4, 
             'goblin1', 
             0, 
-            20
+            20,
+            game.settings.goblinSpeed
         ).setOrigin(0,0);
         this.goblin04 = new Goblin(
             this, 
@@ -63,7 +67,8 @@ class Play extends Phaser.Scene {
             borderUISize*7 + borderPadding*6, 
             'goblin1', 
             0, 
-            10
+            10,
+            game.settings.goblinSpeed
         ).setOrigin(0,0);
         
         // brown UI background
@@ -118,9 +123,11 @@ class Play extends Phaser.Scene {
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', 
-        scoreConfig).setOrigin(0.5);
+            scoreConfig).setOrigin(0.5);
             this.gameOver = true;
+            this.sound.stopAll();
         }, null, this);
+        this.timeLeft = this.add.text(game.config.width/2, borderUISize + borderPadding*2, 0, scoreConfig);
     }
 
     update() {
@@ -139,6 +146,7 @@ class Play extends Phaser.Scene {
             this.goblin02.update();
             this.goblin03.update();
             this.goblin04.update();
+            this.timeLeft.text = Math.floor((game.settings.gameTimer - (this.clock.getElapsed()))/1000);
         }
 
         // check collisions
@@ -197,6 +205,6 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += goblin.points;
         this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion');
+        this.sound.play('sfx_die');
     }
 }

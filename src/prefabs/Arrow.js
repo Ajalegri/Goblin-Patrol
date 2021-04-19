@@ -7,7 +7,7 @@ class Arrow extends Phaser.GameObjects.Sprite {
         this.isFiring = false;      // track arrow's firing status
         this.moveSpeed = 2;         // pixels per frame
 
-        this.sfxArrow = scene.sound.add('sfx_rocket'); // add arrow sfx
+        this.sfxArrow = scene.sound.add('sfx_shoot'); // add arrow sfx
     }
 
     update () {

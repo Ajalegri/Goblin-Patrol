@@ -5,9 +5,10 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // load audio
-        this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/explosion38.wav');
-        this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.audio('sfx_select', './assets/select.wav');
+        this.load.audio('sfx_die', './assets/die.wav');
+        this.load.audio('sfx_shoot', './assets/shoot.wav');
+        this.load.audio('music', './assets/music.wav');
     }
 
     create() {
@@ -42,7 +43,8 @@ class Menu extends Phaser.Scene {
             // easy mode
             game.settings = {
                 goblinSpeed: 3,
-                gameTimer: 60000    
+                gameTimer: 60000,
+                speedTimer: 30000
             }
             this.sound.play('sfx_select');
             this.scene.start('playScene');    
@@ -51,7 +53,8 @@ class Menu extends Phaser.Scene {
             // hard mode
             game.settings = {
                 goblinSpeed: 4,
-                gameTimer: 45000    
+                gameTimer: 45000,
+                speedTimer: 30000
             }
             this.sound.play('sfx_select');
             this.scene.start('playScene');    
