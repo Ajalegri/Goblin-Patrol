@@ -4,7 +4,7 @@ class Goblin1 extends Phaser.GameObjects.Sprite {
         super(scene, x, y , texture, frame);
         scene.add.existing(this);                       // add to existing scene
         this.points = pointValue;                       // store pointValue
-        this.moveSpeed = game.settings.goblinSpeed;     // pixels per frame
+        this.moveSpeed = game.settings.goblin1Speed;    // pixels per frame
     }
 
     update() {

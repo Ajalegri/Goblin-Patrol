@@ -5,64 +5,73 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('arrow', './assets/arrow.png');
+        this.load.image('goblin1', './assets/goblin1.png');
+        this.load.image('goblin2', './assets/goblin2.png');
+        this.load.image('starfield', './assets/field.png');
         // load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     } 
 
     create() {
         // place tile sprite
-        this.starfield = this.add.tileSprite(
+        this.field = this.add.tileSprite(
             0, 
             0, 
             640, 
             480, 
             'starfield'
         ).setOrigin(0, 0);
+        
+        // add arrow (p1)
+        this.p1Arrow = new Arrow(
+            this, 
+            game.config.width/2, 
+            game.config.height - borderUISize - borderPadding, 
+            'arrow'
+        ).setOrigin(0.5, 0);
 
-        // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
+        // add goblins (x3)
+        this.goblin01 = new Goblin1(
+            this, 
+            game.config.width + borderUISize*9, 
+            borderUISize*4, 
+            'goblin2', 
+            0, 
+            60
+        ).setOrigin(0, 0);
+        this.goblin02 = new Goblin1(
+            this, 
+            game.config.width + borderUISize*6, 
+            borderUISize*5 + borderPadding*2, 
+            'goblin1', 
+            0, 
+            30
+        ).setOrigin(0, 0);
+        this.goblin03 = new Goblin1(
+            this, 
+            game.config.width + borderUISize*3, 
+            borderUISize*6 + borderPadding*4, 
+            'goblin1', 
+            0, 
+            20
+        ).setOrigin(0,0);
+        this.goblin04 = new Goblin1(
+            this, 
+            game.config.width, 
+            borderUISize*7 + borderPadding*6, 
+            'goblin1', 
+            0, 
+            10
+        ).setOrigin(0,0);
+        
+        // brown UI background
+        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x663931).setOrigin(0, 0);
         // white borders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        
-        // add rocket (p1)
-        this.p1Rocket = new Rocket(
-            this, 
-            game.config.width/2, 
-            game.config.height - borderUISize - borderPadding, 
-            'rocket'
-        ).setOrigin(0.5, 0);
-
-        // add spaceships (x3)
-        this.ship01 = new Spaceship(
-            this, 
-            game.config.width + borderUISize*6, 
-            borderUISize*4, 
-            'spaceship', 
-            0, 
-            30
-        ).setOrigin(0, 0);
-        this.ship02 = new Spaceship(
-            this, 
-            game.config.width + borderUISize*3, 
-            borderUISize*5 + borderPadding*2, 
-            'spaceship', 
-            0, 
-            20
-        ).setOrigin(0,0);
-        this.ship03 = new Spaceship(
-            this, 
-            game.config.width, 
-            borderUISize*6 + borderPadding*4, 
-            'spaceship', 
-            0, 
-            10
-        ).setOrigin(0,0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -118,55 +127,58 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX -= 4;
-
         if(!this.gameOver) {
-            this.p1Rocket.update();     // update rocket sprite
-            this.ship01.update();       // update spaceships (x3)
-            this.ship02.update();
-            this.ship03.update();
+            this.p1Arrow.update();      // update arrow sprite
+            this.goblin01.update();     // update goblins (x3)
+            this.goblin02.update();
+            this.goblin03.update();
+            this.goblin04.update();
         }
 
         // check collisions
-        if(this.checkCollision(this.p1Rocket, this.ship03)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship03);
+        if(this.checkCollision(this.p1Arrow, this.goblin04)) {
+            this.p1Arrow.reset();
+            this.goblinDie(this.goblin04);
         }
-        if (this.checkCollision(this.p1Rocket, this.ship02)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship02);
+        if(this.checkCollision(this.p1Arrow, this.goblin03)) {
+            this.p1Arrow.reset();
+            this.goblinDie(this.goblin03);
         }
-        if (this.checkCollision(this.p1Rocket, this.ship01)) {
-            this.p1Rocket.reset();
-            this.shipExplode(this.ship01);
+        if (this.checkCollision(this.p1Arrow, this.goblin02)) {
+            this.p1Arrow.reset();
+            this.goblinDie(this.goblin02);
+        }
+        if (this.checkCollision(this.p1Arrow, this.goblin01)) {
+            this.p1Arrow.reset();
+            this.goblinDie(this.goblin01);
         }
     }
 
-    checkCollision(rocket, ship) {
+    checkCollision(arrow, goblin) {
         // simple AABB checking
-        if (rocket.x < ship.x + ship.width && 
-            rocket.x + rocket.width > ship.x && 
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship. y) {
+        if (arrow.x < goblin.x + goblin.width && 
+            arrow.x + arrow.width > goblin.x && 
+            arrow.y < goblin.y + goblin.height &&
+            arrow.height + arrow.y > goblin. y) {
                 return true;
         } else {
             return false;
         }
     }
 
-    shipExplode(ship) {
-        // temporarily hide ship
-        ship.alpha = 0;
-        // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+    goblinDie(goblin) {
+        // temporarily hide goblin
+        goblin.alpha = 0;
+        // create explosion sprite at goblin's position
+        let boom = this.add.sprite(goblin.x, goblin.y, 'explosion').setOrigin(0, 0);
         boom.anims.play('explode');             // play explode animation
         boom.on('animationcomplete', () => {    // callback after anim completes
-            ship.reset();                       // reset ship position
-            ship.alpha = 1;                     // make ship visible again
+            goblin.reset();                     // reset goblin position
+            goblin.alpha = 1;                   // make goblin visible again
             boom.destroy();                     // remove animation sprite
         });
         // score add and repaint
-        this.p1Score += ship.points;
+        this.p1Score += goblin.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
     }
