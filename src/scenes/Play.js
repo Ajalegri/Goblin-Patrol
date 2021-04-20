@@ -35,15 +35,17 @@ class Play extends Phaser.Scene {
         ).setOrigin(0.5, 0);
 
         // add goblins (x4)
+        let gobDir = Math.round(Math.random())*2-1;
         this.goblin01 = new Goblin(
             this, 
-            game.config.width + borderUISize*9, 
+            0 - borderUISize*9, 
             borderUISize*4, 
             'goblin2', 
             0, 
             60,
-            game.settings.goblinSpeed+0.5
+            (game.settings.goblinSpeed+1)*gobDir
         ).setOrigin(0, 0);
+        gobDir = Math.round(Math.random())*2-1;
         this.goblin02 = new Goblin(
             this, 
             game.config.width + borderUISize*6, 
@@ -51,8 +53,9 @@ class Play extends Phaser.Scene {
             'goblin1', 
             0, 
             30,
-            game.settings.goblinSpeed
+            (game.settings.goblinSpeed-0.5)*gobDir
         ).setOrigin(0, 0);
+        gobDir = Math.round(Math.random())*2-1;
         this.goblin03 = new Goblin(
             this, 
             game.config.width + borderUISize*3, 
@@ -60,8 +63,9 @@ class Play extends Phaser.Scene {
             'goblin1', 
             0, 
             20,
-            game.settings.goblinSpeed
+            game.settings.goblinSpeed*gobDir
         ).setOrigin(0,0);
+        gobDir = Math.round(Math.random())*2-1;
         this.goblin04 = new Goblin(
             this, 
             game.config.width, 
@@ -69,11 +73,11 @@ class Play extends Phaser.Scene {
             'goblin1', 
             0, 
             10,
-            game.settings.goblinSpeed
+            (game.settings.goblinSpeed+0.5)*gobDir
         ).setOrigin(0,0);
 
-        // brown UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x663931).setOrigin(0, 0);
+        // UI background
+        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0xEED388).setOrigin(0, 0);
 
         // tree borders
         this.trees1 = this.add.tileSprite(
@@ -109,7 +113,7 @@ class Play extends Phaser.Scene {
         let scoreConfig = {
             fontFamily: 'Georgia',
             fontSize: '28px',
-            backgroundColor: '#663931',
+            backgroundColor: '#EED388',
             color: '#000000',
             align: 'right',
             padding: {

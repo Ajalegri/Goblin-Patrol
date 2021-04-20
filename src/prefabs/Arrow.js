@@ -5,7 +5,7 @@ class Arrow extends Phaser.GameObjects.Sprite {
     
         scene.add.existing(this);   // add to existing, displayList, updateList
         this.isFiring = false;      // track arrow's firing status
-        this.moveSpeed = 2;         // pixels per frame
+        this.moveSpeed = 3;         // pixels per frame
 
         this.sfxArrow = scene.sound.add('sfx_shoot'); // add arrow sfx
     }
@@ -26,7 +26,7 @@ class Arrow extends Phaser.GameObjects.Sprite {
         }
         // if fired, move up
         if(this.isFiring && this.y >= borderUISize * 3 + borderPadding) {
-            this.y -= this.moveSpeed;
+            this.y -= this.moveSpeed+1;
         }
         // reset on miss
         if(this.y <= borderUISize * 3 + borderPadding) {
