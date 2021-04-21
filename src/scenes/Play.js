@@ -35,7 +35,6 @@ class Play extends Phaser.Scene {
         ).setOrigin(0.5, 0);
 
         // add goblins (x4)
-        let gobDir = Math.round(Math.random())*2-1;
         this.goblin01 = new Goblin(
             this, 
             0 - borderUISize*9, 
@@ -43,9 +42,8 @@ class Play extends Phaser.Scene {
             'goblin2', 
             0, 
             60,
-            (game.settings.goblinSpeed+1)*gobDir
+            game.settings.goblinSpeed+1
         ).setOrigin(0, 0);
-        gobDir = Math.round(Math.random())*2-1;
         this.goblin02 = new Goblin(
             this, 
             game.config.width + borderUISize*6, 
@@ -53,9 +51,8 @@ class Play extends Phaser.Scene {
             'goblin1', 
             0, 
             30,
-            (game.settings.goblinSpeed-0.5)*gobDir
+            game.settings.goblinSpeed-0.5
         ).setOrigin(0, 0);
-        gobDir = Math.round(Math.random())*2-1;
         this.goblin03 = new Goblin(
             this, 
             game.config.width + borderUISize*3, 
@@ -63,9 +60,8 @@ class Play extends Phaser.Scene {
             'goblin1', 
             0, 
             20,
-            game.settings.goblinSpeed*gobDir
+            game.settings.goblinSpeed
         ).setOrigin(0,0);
-        gobDir = Math.round(Math.random())*2-1;
         this.goblin04 = new Goblin(
             this, 
             game.config.width, 
@@ -73,7 +69,7 @@ class Play extends Phaser.Scene {
             'goblin1', 
             0, 
             10,
-            (game.settings.goblinSpeed+0.5)*gobDir
+            game.settings.goblinSpeed+0.5
         ).setOrigin(0,0);
 
         // UI background
@@ -156,6 +152,13 @@ class Play extends Phaser.Scene {
             this.goblin03.update();
             this.goblin04.update();
             this.timeLeft.text = Math.floor((game.settings.gameTimer - (this.clock.getElapsed()))/1000);
+            // 30 second speed increase
+            if(this.clock.getElapsed()/1000 >= 30) {
+                this.goblin01.moveSpeed = (this.goblin01.spd+game.settings.speedMod)*this.goblin01.dir;
+                this.goblin02.moveSpeed = (this.goblin02.spd+game.settings.speedMod)*this.goblin02.dir;
+                this.goblin03.moveSpeed = (this.goblin03.spd+game.settings.speedMod)*this.goblin03.dir;
+                this.goblin04.moveSpeed = (this.goblin04.spd+game.settings.speedMod)*this.goblin04.dir;
+            }
         }
 
         // check collisions

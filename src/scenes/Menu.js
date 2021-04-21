@@ -44,7 +44,8 @@ class Menu extends Phaser.Scene {
             game.settings = {
                 goblinSpeed: 3,
                 gameTimer: 60000,
-                speedTimer: 30000
+                speedTimer: 30000,
+                speedMod: 2
             }
             this.sound.play('sfx_select');
             this.scene.start('playScene');    
@@ -54,7 +55,8 @@ class Menu extends Phaser.Scene {
             game.settings = {
                 goblinSpeed: 4,
                 gameTimer: 45000,
-                speedTimer: 30000
+                speedTimer: 30000,
+                speedMod: 2
             }
             this.sound.play('sfx_select');
             this.scene.start('playScene');    

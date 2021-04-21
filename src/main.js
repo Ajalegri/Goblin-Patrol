@@ -23,9 +23,10 @@ let keyF, keyR, keyLEFT, keyRIGHT;
     -------- POINTS BREAKDOWN ---------
 
     WIP Full game aesthetic redesign (art, sound, UI) (60)
-    WIP 30-second speed increase (5)
+    30-second speed increase (5)
+    Randomized enemy direction (5)
     Original music (5)
     Visible timer (10)
     New enemy type (20)
-    Total: 100
+    Total: 105
 */

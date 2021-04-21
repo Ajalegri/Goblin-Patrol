@@ -2,9 +2,11 @@
 class Goblin extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame, pointValue, speed) {
         super(scene, x, y , texture, frame);
-        scene.add.existing(this);       // add to existing scene
-        this.points = pointValue;       // store pointValue
-        this.moveSpeed = speed;         // pixels per frame
+        scene.add.existing(this);                   // add to existing scene
+        this.points = pointValue;                   // store pointValue
+        this.dir = Math.round(Math.random())*2-1;   // random direction
+        this.spd = speed                            // storing the speed variable for reference
+        this.moveSpeed = this.spd*this.dir;              // pixels per frame
     }
 
     update() {
