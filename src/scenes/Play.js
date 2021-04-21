@@ -73,7 +73,7 @@ class Play extends Phaser.Scene {
         ).setOrigin(0,0);
 
         // UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0xEED388).setOrigin(0, 0);
+        this.add.rectangle(0, borderPadding, game.config.width, borderUISize*3, 0xEED388).setOrigin(0, 0);
 
         // tree borders
         this.trees1 = this.add.tileSprite(
@@ -107,18 +107,17 @@ class Play extends Phaser.Scene {
 
         // display score
         let scoreConfig = {
-            fontFamily: 'Georgia',
-            fontSize: '28px',
-            backgroundColor: '#EED388',
+            fontFamily: 'Courier',
+            fontSize: '50px',
             color: '#000000',
             align: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 100
+            fixedWidth: 0
         }
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(game.config.width/4, borderPadding+borderUISize*1.5, this.p1Score, scoreConfig).setOrigin(0.5);
     
         // GAME OVER flag
         this.gameOver = false;
@@ -126,13 +125,15 @@ class Play extends Phaser.Scene {
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            scoreConfig.fontSize = 26;
+            scoreConfig.fontFamily = 'Georgia';
+            this.add.rectangle(0, game.config.height/2-borderUISize+borderPadding, game.config.width, borderUISize*3, 0xEED388).setOrigin(0, 0);
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', 
-            scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
             this.sound.stopAll();
         }, null, this);
-        this.timeLeft = this.add.text(game.config.width/2, borderUISize + borderPadding*2, 0, scoreConfig);
+        this.timeLeft = this.add.text(game.config.width/2, borderPadding+borderUISize*1.5, 0, scoreConfig).setOrigin(0.5);
     }
 
     update() {
